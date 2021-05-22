@@ -8,12 +8,12 @@ namespace GraphQueryable
 {
     public class GraphQueryProvider : IQueryProvider
     {
-        public string MethodName { get; }
+        public string ScopeName { get; }
         public IGraphVisitor Visitor { get; set; }
 
-        public GraphQueryProvider(string methodName, IGraphVisitor visitor)
+        public GraphQueryProvider(string scopeName, IGraphVisitor visitor)
         {
-            MethodName = methodName;
+            ScopeName = scopeName;
             Visitor = visitor;
         }
         

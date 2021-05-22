@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using GraphQueryable.Drivers;
@@ -13,9 +14,7 @@ namespace GraphQueryable
         {
             _visitor = visitor;
         }
-
-        public string Query { get; set; }
-
+        
         public object Execute(Expression expression)
         {
             return Execute(expression, false);
@@ -36,53 +35,12 @@ namespace GraphQueryable
                 return objs.First();
         }
 
-        public void Parse(Expression expression)
+        public string Parse(IQueryable queryable)
         {
-            _visitor.Visit(expression);
-        }
-        
-        // private object ExecuteExpression(Expression expression)
-        // {
-        //     var objs = new List<object>();
-        //     if (isEnumerable)
-        //         return objs;
-        //     else 
-        //         return objs.First();
-        //     
-        //     
-        //     // The expression must represent a query over the data source. 
-        //     if (!IsQueryOverDataSource(expression))
-        //         throw new InvalidProgramException("No query over the data source was specified.");
-        //     
-        //     // Call the Web service and get the results.
-        //     // TODO: call api?
-        //     List<object> places = new List<object>();
-        //
-        //     // Copy the IEnumerable places to an IQueryable.
-        //     IQueryable<object> queryablePlaces = places.AsQueryable<object>();
-        //
-        //     // Copy the expression tree that was passed in, changing only the first 
-        //     // argument of the innermost MethodCallExpression.
-        //     ExpressionTreeModifier treeCopier = new ExpressionTreeModifier(queryablePlaces);
-        //     Expression newExpressionTree = treeCopier.Visit(expression);
-        //
-        //     // This step creates an IQueryable that executes by replacing Queryable methods with Enumerable methods. 
-        //     if (isEnumerable)
-        //         return queryablePlaces.Provider.CreateQuery(newExpressionTree);
-        //     else 
-        //         return queryablePlaces.Provider.Execute(newExpressionTree);
-        // }
+            if (queryable.Provider is not GraphQueryProvider graphQueryProvider)
+                throw new NotSupportedException("IQueryable provider must be of type GraphQueryProvider");
 
-        // private static bool IsQueryOverDataSource(Expression expression)
-        // {
-        //     // If expression represents an unqueried IQueryable data source instance, 
-        //     // expression is of type ConstantExpression, not MethodCallExpression. 
-        //     return (expression is MethodCallExpression);
-        // }
-        
-        private IEnumerable<string> ParseProjections(Expression expression)
-        {
-            return new List<string>();
+            return _visitor.ParseQuery(queryable.Expression, graphQueryProvider.ScopeName);
         }
     }
 }

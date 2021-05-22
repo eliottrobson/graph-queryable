@@ -4,6 +4,6 @@ namespace GraphQueryable.Drivers
 {
     public interface IGraphVisitor
     {
-        Expression Visit(Expression expression);
+        string ParseQuery(Expression expression, string scopeName);
     }
 }

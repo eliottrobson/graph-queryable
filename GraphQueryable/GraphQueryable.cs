@@ -10,12 +10,12 @@ namespace GraphQueryable
     {
         #region Constructors
         
-        public GraphQueryable(string methodName, IGraphVisitor visitor)
+        public GraphQueryable(string scopeName, IGraphVisitor visitor)
         {
-            if (methodName == null)
-                throw new ArgumentNullException(nameof(methodName));
+            if (scopeName == null)
+                throw new ArgumentNullException(nameof(scopeName));
             
-            Provider = new GraphQueryProvider(methodName, visitor);
+            Provider = new GraphQueryProvider(scopeName, visitor);
             Expression = Expression.Constant(this);
         }
 
