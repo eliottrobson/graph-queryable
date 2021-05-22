@@ -2,7 +2,7 @@
 
 GraphQueryable is a .NET package for convention-based Linq/IQueryable support.
 
-[![Build](https://github.com/eliottrobson/graph-queryable/actions/workflows/dotnet.yml/badge.svg)](https://github.com/eliottrobson/graph-queryable/actions/workflows/dotnet.yml)
+[![Build](https://github.com/eliottrobson/graph-queryable/actions/workflows/dotnet.yml/badge.svg?branch=main)](https://github.com/eliottrobson/graph-queryable/actions/workflows/dotnet.yml)
 
 ## Supported Conventions
 
