@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace GraphQueryable.Attributes
 {
@@ -6,6 +7,7 @@ namespace GraphQueryable.Attributes
     public class GraphFieldAttribute : Attribute
     {
         public string Name { get; }
+        public int Order { get; set; }
 
         public GraphFieldAttribute(string name)
         {

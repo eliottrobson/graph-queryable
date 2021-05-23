@@ -2,8 +2,10 @@
 {
     public record Country
     {
-        public string Name { get; init; }
+        public string Code { get; init; }
 
-        public string Capital { get; init; }
+        public string Name { get; init; }
+        
+        public Continent Continent { get; init; }
     }
 }

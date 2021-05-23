@@ -1,29 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GraphQueryable.Server.Models;
+using JetBrains.Annotations;
 
 namespace GraphQueryable.Server.Graph
 {
     public class Query
     {
-        private readonly List<Country> _countries = new()
-        {
-            new Country
-            {
-                Name = "United Kingdom",
-                Capital = "London"
-            },
-            new Country
-            {
-                Name = "France",
-                Capital = "Paris"
-            },
-            new Country
-            {
-                Name = "Germany",
-                Capital = "Berlin"
-            }
-        };
-        
-        public List<Country> GetCountries() => _countries;
+        [UsedImplicitly]
+        public List<Country> GetCountries() => Data.Countries.Values.ToList();
     }
 }
