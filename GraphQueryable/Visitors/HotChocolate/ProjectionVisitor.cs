@@ -4,27 +4,19 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using GraphQueryable.Attributes;
+using GraphQueryable.Tokens;
 
-namespace GraphQueryable.Drivers.HotChocolate
+namespace GraphQueryable.Visitors.HotChocolate
 {
     public class ProjectionVisitor : ExpressionVisitor
     {
-        private readonly StringBuilder _queryStringBuilder;
         private readonly Stack<ProjectedItem> _projectionScope = new();
         private readonly List<ProjectedItem> _projections = new();
 
-        public ProjectionVisitor()
-        {
-            _queryStringBuilder = new StringBuilder();
-        }
-        
-        public string ParseQuery(Expression node)
+        public IEnumerable<Field> ParseExpression(Expression node)
         {
             base.Visit(node);
-            _queryStringBuilder.AppendJoin(", ", ResolveProjections(_projections));
-            var query = _queryStringBuilder.ToString();
-            _queryStringBuilder.Clear();
-            return query;
+            return ResolveProjections(_projections);
         }
 
         protected override Expression VisitMember(MemberExpression node)
@@ -59,21 +51,17 @@ namespace GraphQueryable.Drivers.HotChocolate
             return base.VisitParameter(node);
         }
 
-        private static IEnumerable<string> ResolveProjections(IEnumerable<ProjectedItem> projections)
+        private static List<Field> ResolveProjections(IEnumerable<ProjectedItem> projections)
         {
-           return projections
+            return projections
                 .GroupBy(p => p.Name)
-                .Select(p => new
+                .Select(p => new Field
                 {
-                    p.First().Name,
-                    p.First().Order,
-                    Children = p.SelectMany(ps => ps.Children)
+                    Name = p.First().Name,
+                    Order = p.First().Order,
+                    Children = ResolveProjections(p.SelectMany(ps => ps.Children))
                 })
-                .OrderBy(p => p.Order)
-                .Select(p => p.Name + (p.Children.Any()
-                    ? " { " + string.Join(", ", ResolveProjections(p.Children)) + " }"
-                    : ""
-                ));
+                .ToList();
         }
     }
 

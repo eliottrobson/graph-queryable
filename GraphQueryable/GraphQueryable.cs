@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using GraphQueryable.Drivers;
 
 namespace GraphQueryable
 {
@@ -10,12 +9,12 @@ namespace GraphQueryable
     {
         #region Constructors
         
-        public GraphQueryable(string scopeName, IGraphVisitor visitor)
+        public GraphQueryable(string scopeName)
         {
             if (scopeName == null)
                 throw new ArgumentNullException(nameof(scopeName));
             
-            Provider = new GraphQueryProvider(scopeName, visitor);
+            Provider = new GraphQueryProvider(scopeName);
             Expression = Expression.Constant(this);
         }
 

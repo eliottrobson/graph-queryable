@@ -1,5 +1,4 @@
-﻿using GraphQueryable.Drivers.HotChocolate;
-using GraphQueryable.Tests.Client;
+﻿using GraphQueryable.Tests.Client;
 using Xunit;
 
 namespace GraphQueryable.Tests
@@ -10,8 +9,7 @@ namespace GraphQueryable.Tests
         public void ScopeName_IsAccessible_FromProvider()
         {
             // Arrange
-            var visitor = new HotChocolateConventionVisitor();
-            var countries = new GraphQueryable<Country>("countries", visitor);
+            var countries = new GraphQueryable<Country>("countries");
 
             // Assert
             var graphProvider = Assert.IsType<GraphQueryProvider>(countries.Provider);

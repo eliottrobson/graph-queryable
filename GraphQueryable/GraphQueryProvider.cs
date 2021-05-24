@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using GraphQueryable.Drivers;
 using GraphQueryable.Helpers;
 
 namespace GraphQueryable
@@ -9,12 +8,10 @@ namespace GraphQueryable
     public class GraphQueryProvider : IQueryProvider
     {
         public string ScopeName { get; }
-        public IGraphVisitor Visitor { get; set; }
 
-        public GraphQueryProvider(string scopeName, IGraphVisitor visitor)
+        public GraphQueryProvider(string scopeName)
         {
             ScopeName = scopeName;
-            Visitor = visitor;
         }
         
         public IQueryable CreateQuery(Expression expression)
@@ -38,12 +35,14 @@ namespace GraphQueryable
 
         public object Execute(Expression expression)
         {
-            return new GraphQueryContext(Visitor).Execute(expression);
+            // return new GraphQueryContext(_visitor).Execute(expression);
+            return default;
         }
 
         public TResult Execute<TResult>(Expression expression)
         {
-            return new GraphQueryContext(Visitor).Execute<TResult>(expression);
+            // return new GraphQueryContext(_visitor).Execute<TResult>(expression);
+            return default;
         }
     }
 }
