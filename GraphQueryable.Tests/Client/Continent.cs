@@ -4,10 +4,10 @@ namespace GraphQueryable.Tests.Client
 {
     public class Continent
     {
-        [GraphField("code", Order = 1)]
+        [GraphField("code")]
         public string Code { get; set; }
         
-        [GraphField("name", Order = 2)]
+        [GraphField("name")]
         public string Name { get; set; }
     }
 }

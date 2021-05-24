@@ -9,8 +9,8 @@ namespace GraphQueryable.Visitors
 {
     public class ProjectionVisitor : ExpressionVisitor
     {
-        private readonly Stack<ProjectedItem> _projectionScope = new();
-        private readonly List<ProjectedItem> _projections = new();
+        private readonly Stack<ProjectedField> _memberScope = new();
+        private readonly List<ProjectedField> _projections = new();
 
         public IEnumerable<Field> ParseExpression(Expression node)
         {
@@ -23,23 +23,22 @@ namespace GraphQueryable.Visitors
             var graphFieldAttribute = node.Member.GetCustomAttribute<GraphFieldAttribute>();
             if (graphFieldAttribute != null)
             {
-                var item = new ProjectedItem
+                var item = new ProjectedField
                 {
-                    Name = graphFieldAttribute.Name,
-                    Order = graphFieldAttribute.Order
+                    Name = graphFieldAttribute.Name
                 };
-                
-                if (_projectionScope.TryPeek(out var childItem))
-                    item.Children.Add(childItem);
-                    
-                _projectionScope.Push(item);
+
+                if (_memberScope.TryPeek(out var childItem))
+                    item.Child = childItem;
+
+                _memberScope.Push(item);
             }
 
             var result = base.VisitMember(node);
 
             if (graphFieldAttribute != null)
             {
-                _projectionScope.Pop();
+                _memberScope.Pop();
             }
 
             return result;
@@ -47,32 +46,30 @@ namespace GraphQueryable.Visitors
 
         protected override Expression VisitParameter(ParameterExpression node)
         {
-            if (_projectionScope.TryPeek(out var rootItem))
+            if (_memberScope.TryPeek(out var rootItem))
                 _projections.Add(rootItem);
-            
+
             return base.VisitParameter(node);
         }
 
-        private static List<Field> ResolveProjections(IEnumerable<ProjectedItem> projections)
+        private static List<Field> ResolveProjections(IEnumerable<ProjectedField> projections)
         {
             return projections
+                .Where(p => p != null)
                 .GroupBy(p => p.Name)
                 .Select(p => new Field
                 {
                     Name = p.First().Name,
-                    Order = p.First().Order,
-                    Projections = ResolveProjections(p.SelectMany(ps => ps.Children))
+                    Children = ResolveProjections(p.Select(ps => ps.Child))
                 })
                 .ToList();
         }
-        
-        private class ProjectedItem
+
+        private class ProjectedField
         {
             public string Name { get; set; }
 
-            public int Order { get; set; }
-
-            public List<ProjectedItem> Children { get; } = new();
+            public ProjectedField Child { get; set; }
         }
     }
 }

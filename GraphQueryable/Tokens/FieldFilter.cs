@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace GraphQueryable.Tokens
 {
-    public class FieldFilter
+    public record FieldFilter
     {
-        public Field Field { get; set; }
+        public List<string> Name { get; set; }
         
         public FieldFilterType Type { get; set; }
         
@@ -13,8 +13,19 @@ namespace GraphQueryable.Tokens
 
     public enum FieldFilterType
     {
-        Unknown, 
+        None, 
         
-        Equal
+        Not,
+        And,
+        Or,
+        
+        Equal,
+        NotEqual,
+        
+        In,
+        
+        StringContains,
+        StringStartsWith,
+        StringEndsWith
     }
 }

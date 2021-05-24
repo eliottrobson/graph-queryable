@@ -7,7 +7,6 @@ namespace GraphQueryable.Attributes
     public class GraphFieldAttribute : Attribute
     {
         public string Name { get; }
-        public int Order { get; set; }
 
         public GraphFieldAttribute(string name)
         {
