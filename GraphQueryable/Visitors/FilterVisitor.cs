@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using GraphQueryable.Attributes;
@@ -14,8 +15,7 @@ namespace GraphQueryable.Visitors
         public IEnumerable<FieldFilter> ParseExpression(Expression node)
         {
             base.Visit(node);
-
-            return new List<FieldFilter>();
+            return ResolveFilters(_filters);
         }
         
         protected override Expression VisitMember(MemberExpression node)
@@ -23,45 +23,41 @@ namespace GraphQueryable.Visitors
             var graphFieldAttribute = node.Member.GetCustomAttribute<GraphFieldAttribute>();
             if (graphFieldAttribute != null)
             {
-                var item = new FilteredItem
-                {
-                    Name = graphFieldAttribute.Name,
-                    Order = graphFieldAttribute.Order,
-                    FilterType = FieldFilterType.Unknown
-                };
-                
                 if (_filterScope.TryPeek(out var childItem))
-                    item.Children.Add(childItem);
-                    
-                _filterScope.Push(item);
+                {
+                    childItem.Name = graphFieldAttribute.Name;
+                    childItem.Order = graphFieldAttribute.Order;
+                }
             }
 
-            var result = base.VisitMember(node);
-
-            if (graphFieldAttribute != null)
-            {
-                _filterScope.Pop();
-            }
-
-            return result;
+            return base.VisitMember(node);
         }
 
         protected override Expression VisitBinary(BinaryExpression node)
         {
+            var item = new FilteredItem
+            {
+                Filter = new FilteredItemFilter
+                {
+                    Type = FieldFilterType.Unknown
+                }
+            };
+            
+            _filterScope.Push(item);
+
             Visit(node.Left);
 
-            if (_filterScope.TryPeek(out var scopeItem))
+            switch (node.NodeType)
             {
-                switch (node.NodeType)
-                {
-                    case ExpressionType.Equal:
-                        scopeItem.FilterType = FieldFilterType.Equal;
-                        break;
-                }
+                case ExpressionType.Equal:
+                    item.Filter.Type = FieldFilterType.Equal;
+                    break;
             }
 
             Visit(node.Right);
-            
+
+            _filterScope.Pop();
+                            
             return node;
         }
 
@@ -69,7 +65,7 @@ namespace GraphQueryable.Visitors
         {
             if (_filterScope.TryPeek(out var scopeItem))
             {
-                scopeItem.FilterValue = node.Value;
+                scopeItem.Filter.Value = node.Value;
             }
 
             return base.VisitConstant(node);
@@ -83,17 +79,40 @@ namespace GraphQueryable.Visitors
             return base.VisitParameter(node);
         }
         
+        private static List<FieldFilter> ResolveFilters(IEnumerable<FilteredItem> filters)
+        {
+            return filters
+                .GroupBy(f => f.Name)
+                .SelectMany(f =>
+                    f.Select(i => new FieldFilter
+                    {
+                        Field = new Field
+                        {
+                            Name = i.Name
+                        },
+                        Type = i.Filter.Type,
+                        Value = i.Filter.Value
+                    })
+                    .ToList())
+                .ToList();
+        }
+        
         private class FilteredItem
         {
             public string Name { get; set; }
 
             public int Order { get; set; }
             
-            public FieldFilterType FilterType { get; set; }
-            
-            public object FilterValue { get; set; }
+            public FilteredItemFilter Filter { get; set; }
 
             public List<FilteredItem> Children { get; } = new();
+        }
+
+        private class FilteredItemFilter
+        {
+            public FieldFilterType Type { get; set; }
+            
+            public object Value { get; set; }
         }
     }
 }

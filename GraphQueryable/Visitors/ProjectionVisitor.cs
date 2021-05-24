@@ -61,7 +61,7 @@ namespace GraphQueryable.Visitors
                 {
                     Name = p.First().Name,
                     Order = p.First().Order,
-                    Children = ResolveProjections(p.SelectMany(ps => ps.Children))
+                    Projections = ResolveProjections(p.SelectMany(ps => ps.Children))
                 })
                 .ToList();
         }

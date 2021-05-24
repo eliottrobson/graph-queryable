@@ -21,6 +21,7 @@ namespace GraphQueryable.Tests
             // Assert
             var stringFilter = Assert.Single(countryField.Filters);
             Assert.NotNull(stringFilter);
+            Assert.Equal("code", stringFilter.Field.Name);
             Assert.Equal(FieldFilterType.Equal, stringFilter.Type);
             Assert.Equal("GB", stringFilter.Value);
         }

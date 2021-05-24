@@ -19,7 +19,7 @@ namespace GraphQueryable.Tests
 
             // Assert
             Assert.Equal("countries", countryField.Name);
-            var countryNameField = Assert.Single(countryField.Children);
+            var countryNameField = Assert.Single(countryField.Projections);
             Assert.NotNull(countryNameField);
             Assert.Equal("name", countryNameField.Name);
         }
@@ -36,9 +36,9 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            Assert.Equal(2, countryField.Children.Count);
-            Assert.Single(countryField.Children, f => f.Name == "code");
-            Assert.Single(countryField.Children, f => f.Name == "name");
+            Assert.Equal(2, countryField.Projections.Count);
+            Assert.Single(countryField.Projections, f => f.Name == "code");
+            Assert.Single(countryField.Projections, f => f.Name == "name");
         }
 
         [Fact]
@@ -53,10 +53,10 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var continentField = Assert.Single(countryField.Children);
+            var continentField = Assert.Single(countryField.Projections);
             Assert.NotNull(continentField);
             Assert.Equal("continent", continentField.Name);
-            var nameField = Assert.Single(continentField.Children);
+            var nameField = Assert.Single(continentField.Projections);
             Assert.NotNull(nameField);
             Assert.Equal("name", nameField.Name);
         }
@@ -73,12 +73,12 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var continentField = Assert.Single(countryField.Children);
+            var continentField = Assert.Single(countryField.Projections);
             Assert.NotNull(continentField);
             Assert.Equal("continent", continentField.Name);
-            Assert.Equal(2, continentField.Children.Count);
-            Assert.Single(continentField.Children, f => f.Name == "code");
-            Assert.Single(continentField.Children, f => f.Name == "name");
+            Assert.Equal(2, continentField.Projections.Count);
+            Assert.Single(continentField.Projections, f => f.Name == "code");
+            Assert.Single(continentField.Projections, f => f.Name == "name");
         }
 
         [Fact]
@@ -93,11 +93,11 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
         
             // Assert
-            Assert.Equal(2, countryField.Children.Count);
-            Assert.Single(countryField.Children, f => f.Name == "name");
-            var continentField = Assert.Single(countryField.Children, c => c.Name == "continent");
+            Assert.Equal(2, countryField.Projections.Count);
+            Assert.Single(countryField.Projections, f => f.Name == "name");
+            var continentField = Assert.Single(countryField.Projections, c => c.Name == "continent");
             Assert.NotNull(continentField);
-            var continentNameField = Assert.Single(continentField.Children);
+            var continentNameField = Assert.Single(continentField.Projections);
             Assert.NotNull(continentNameField);
             Assert.Equal("name", continentNameField.Name);
         }
@@ -115,14 +115,14 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
         
             // Assert
-            Assert.Equal(3, countryField.Children.Count);
-            Assert.Single(countryField.Children, f => f.Name == "code");
-            Assert.Single(countryField.Children, f => f.Name == "name");
-            var continentField = Assert.Single(countryField.Children, c => c.Name == "continent");
+            Assert.Equal(3, countryField.Projections.Count);
+            Assert.Single(countryField.Projections, f => f.Name == "code");
+            Assert.Single(countryField.Projections, f => f.Name == "name");
+            var continentField = Assert.Single(countryField.Projections, c => c.Name == "continent");
             Assert.NotNull(continentField);
-            Assert.Equal(2, continentField.Children.Count);
-            Assert.Single(continentField.Children, f => f.Name == "code");
-            Assert.Single(continentField.Children, f => f.Name == "name");
+            Assert.Equal(2, continentField.Projections.Count);
+            Assert.Single(continentField.Projections, f => f.Name == "code");
+            Assert.Single(continentField.Projections, f => f.Name == "name");
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
         
             // Assert
-            var countryNameField = Assert.Single(countryField.Children);
+            var countryNameField = Assert.Single(countryField.Projections);
             Assert.NotNull(countryNameField);
             Assert.Equal("name", countryNameField.Name);
         }
@@ -158,11 +158,11 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
         
             // Assert
-            Assert.Equal(2, countryField.Children.Count);
-            Assert.Single(countryField.Children, f => f.Name == "name");
-            var continentField = Assert.Single(countryField.Children, f => f.Name == "continent");
+            Assert.Equal(2, countryField.Projections.Count);
+            Assert.Single(countryField.Projections, f => f.Name == "name");
+            var continentField = Assert.Single(countryField.Projections, f => f.Name == "continent");
             Assert.NotNull(continentField);
-            var continentNameField = Assert.Single(continentField.Children);
+            var continentNameField = Assert.Single(continentField.Projections);
             Assert.NotNull(continentNameField);
             Assert.Equal("name", continentNameField.Name);
         }
@@ -179,10 +179,10 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
         
             // Assert
-            var continentField = Assert.Single(countryField.Children);
+            var continentField = Assert.Single(countryField.Projections);
             Assert.NotNull(continentField);
             Assert.Equal("continent", continentField.Name);
-            var continentNameField = Assert.Single(continentField.Children);
+            var continentNameField = Assert.Single(continentField.Projections);
             Assert.NotNull(continentNameField);
             Assert.Equal("name", continentNameField.Name);
         }

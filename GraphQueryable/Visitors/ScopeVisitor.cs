@@ -27,7 +27,7 @@ namespace GraphQueryable.Visitors
                 var projectionVisitor = new ProjectionVisitor();
 
                 var children = projectionVisitor.ParseExpression(node.Arguments[1]);
-                _field.Children.AddRange(children);
+                _field.Projections.AddRange(children);
             }
             else if (node.Method.Name == nameof(Queryable.Where) && node.Method.DeclaringType == typeof(Queryable))
             {

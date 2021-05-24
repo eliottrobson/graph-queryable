@@ -10,6 +10,6 @@ namespace GraphQueryable.Tokens
 
         public List<FieldFilter> Filters { get; set; } = new();
         
-        public List<Field> Children { get; set; } = new();
+        public List<Field> Projections { get; set; } = new();
     }
 }

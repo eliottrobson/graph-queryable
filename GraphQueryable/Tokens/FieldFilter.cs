@@ -4,7 +4,7 @@ namespace GraphQueryable.Tokens
 {
     public class FieldFilter
     {
-        public List<string> Scope { get; set; }
+        public Field Field { get; set; }
         
         public FieldFilterType Type { get; set; }
         
