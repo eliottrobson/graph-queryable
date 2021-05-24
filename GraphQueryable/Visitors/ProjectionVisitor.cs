@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using GraphQueryable.Attributes;
 using GraphQueryable.Tokens;
 
-namespace GraphQueryable.Visitors.HotChocolate
+namespace GraphQueryable.Visitors
 {
     public class ProjectionVisitor : ExpressionVisitor
     {
@@ -38,7 +37,10 @@ namespace GraphQueryable.Visitors.HotChocolate
 
             var result = base.VisitMember(node);
 
-            _projectionScope.Pop();
+            if (graphFieldAttribute != null)
+            {
+                _projectionScope.Pop();
+            }
 
             return result;
         }
@@ -63,14 +65,14 @@ namespace GraphQueryable.Visitors.HotChocolate
                 })
                 .ToList();
         }
-    }
+        
+        private class ProjectedItem
+        {
+            public string Name { get; set; }
 
-    public class ProjectedItem
-    {
-        public string Name { get; set; }
+            public int Order { get; set; }
 
-        public int Order { get; set; }
-
-        public List<ProjectedItem> Children { get; } = new();
+            public List<ProjectedItem> Children { get; } = new();
+        }
     }
 }

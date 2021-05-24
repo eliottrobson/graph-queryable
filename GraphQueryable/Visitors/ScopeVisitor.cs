@@ -1,9 +1,8 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using GraphQueryable.Tokens;
 
-namespace GraphQueryable.Visitors.HotChocolate
+namespace GraphQueryable.Visitors
 {
     public class ScopeVisitor : ExpressionVisitor
     {
@@ -29,6 +28,13 @@ namespace GraphQueryable.Visitors.HotChocolate
 
                 var children = projectionVisitor.ParseExpression(node.Arguments[1]);
                 _field.Children.AddRange(children);
+            }
+            else if (node.Method.Name == nameof(Queryable.Where) && node.Method.DeclaringType == typeof(Queryable))
+            {
+                var filterVisitor = new FilterVisitor();
+
+                var filters = filterVisitor.ParseExpression(node.Arguments[1]);
+                _field.Filters.AddRange(filters);
             }
             
             return base.VisitMethodCall(node);

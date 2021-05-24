@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using GraphQueryable.Tokens;
 using GraphQueryable.Visitors;
-using GraphQueryable.Visitors.HotChocolate;
 
 namespace GraphQueryable
 {
