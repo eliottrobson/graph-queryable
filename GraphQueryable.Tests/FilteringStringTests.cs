@@ -169,7 +169,7 @@ namespace GraphQueryable.Tests
                     new()
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.In,
+                        Type = FieldFilterType.CollectionIn,
                         Value = new List<string> {"GB", "FR"}
                     }
                 }
@@ -197,7 +197,7 @@ namespace GraphQueryable.Tests
                     new()
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.In,
+                        Type = FieldFilterType.CollectionIn,
                         Value = new List<string> {"GB", "FR"}
                     }
                 }

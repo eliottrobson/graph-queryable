@@ -40,7 +40,7 @@ namespace GraphQueryable.Tokens
         Equal,
         NotEqual,
         
-        In,
+        CollectionIn,
         
         StringContains,
         StringStartsWith,

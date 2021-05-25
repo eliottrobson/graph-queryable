@@ -35,10 +35,6 @@ namespace GraphQueryable.Visitors
 
                 _memberScope.Push(item);
             }
-            else
-            {
-                throw new NotImplementedException("TODO: add support for accessing external objects.");
-            }
 
             var result = base.VisitMember(node);
 
@@ -57,18 +53,14 @@ namespace GraphQueryable.Visitors
         {
             if (_filterScope.TryPeek(out var scopeItem))
             {
+                scopeItem.Filter ??= new FilteredItemFilter();
+
                 if (scopeItem.Filter.Value == default)
-                {
                     scopeItem.Filter.Value = node.Value;
-                }
                 else if (scopeItem.Filter.Value is List<object> filterList)
-                {
                     filterList.Add(node.Value);
-                }
                 else
-                {
                     scopeItem.Filter.Value = new[] {scopeItem.Filter.Value}.Append(node.Value).ToList();
-                }
             }
 
             return base.VisitConstant(node);
@@ -121,7 +113,7 @@ namespace GraphQueryable.Visitors
                     node.Method.DeclaringType == typeof(Enumerable) ||
                     (node.Arguments.Count == 1 && node.Method.DeclaringType ==
                         typeof(List<>).MakeGenericType(node.Arguments[0].Type)) =>
-                    FieldFilterType.In,
+                    FieldFilterType.CollectionIn,
                 _ => throw new NotSupportedException($"Unsupported method type: '{node.Method}'")
             };
 
@@ -154,35 +146,39 @@ namespace GraphQueryable.Visitors
 
         private static List<string> FlattenFieldName(FilteredField field)
         {
-            var name = new List<string> {field.Name};
-            while (field.Child != null)
+            var filteredField = field;
+            var name = new List<string>();
+            
+            do
             {
-                field = field.Child;
-                name.Add(field.Name);
-            }
+                if (filteredField.Name != null)
+                    name.Add(filteredField.Name);
+
+                filteredField = filteredField.Child;
+            } while (filteredField != null);
 
             return name;
         }
 
         private class FilteredField
         {
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
-            public FilteredField Child { get; set; }
+            public FilteredField? Child { get; set; }
         }
 
         private class FilteredItem
         {
-            public FilteredField Field { get; set; }
+            public FilteredField? Field { get; set; }
 
-            public FilteredItemFilter Filter { get; set; }
+            public FilteredItemFilter? Filter { get; set; }
         }
 
         private class FilteredItemFilter
         {
-            public FieldFilterType Type { get; set; }
+            public FieldFilterType? Type { get; set; }
 
-            public object Value { get; set; }
+            public object? Value { get; set; }
         }
     }
 }
