@@ -20,12 +20,20 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var stringFilter = Assert.Single(countryField.Filters);
-            Assert.NotNull(stringFilter);
-            var stringFilterName = Assert.Single(stringFilter.Name);
-            Assert.Equal("code", stringFilterName);
-            Assert.Equal(FieldFilterType.Equal, stringFilter.Type);
-            Assert.Equal("GB", stringFilter.Value);
+            var expected = new Field("countries")
+            {
+                Filters = new List<FieldFilter>
+                {
+                    new()
+                    {
+                        Name = new List<string> {"code"},
+                        Type = FieldFilterType.Equal,
+                        Value = "GB"
+                    }
+                }
+            };
+
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -40,12 +48,20 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var stringFilter = Assert.Single(countryField.Filters);
-            Assert.NotNull(stringFilter);
-            var stringFilterName = Assert.Single(stringFilter.Name);
-            Assert.Equal("code", stringFilterName);
-            Assert.Equal(FieldFilterType.Equal, stringFilter.Type);
-            Assert.Equal("GB", stringFilter.Value);
+            var expected = new Field("countries")
+            {
+                Filters = new List<FieldFilter>
+                {
+                    new()
+                    {
+                        Name = new List<string> {"code"},
+                        Type = FieldFilterType.Equal,
+                        Value = "GB"
+                    }
+                }
+            };
+
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -60,17 +76,22 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var stringFilter = Assert.Single(countryField.Filters);
-            Assert.NotNull(stringFilter);
-            Assert.Collection(
-                stringFilter.Name,
-                f => Assert.Equal("continent", f),
-                f => Assert.Equal("code", f)
-            );
-            Assert.Equal(FieldFilterType.Equal, stringFilter.Type);
-            Assert.Equal("EU", stringFilter.Value);
+            var expected = new Field("countries")
+            {
+                Filters = new List<FieldFilter>
+                {
+                    new()
+                    {
+                        Name = new List<string> {"continent", "code"},
+                        Type = FieldFilterType.Equal,
+                        Value = "EU"
+                    }
+                }
+            };
+
+            Assert.Equal(expected, countryField);
         }
-        
+
         [Fact]
         public void Where_StringNotEqualsField_IsTranslated()
         {
@@ -83,12 +104,20 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var stringFilter = Assert.Single(countryField.Filters);
-            Assert.NotNull(stringFilter);
-            var stringFilterName = Assert.Single(stringFilter.Name);
-            Assert.Equal("code", stringFilterName);
-            Assert.Equal(FieldFilterType.NotEqual, stringFilter.Type);
-            Assert.Equal("GB", stringFilter.Value);
+            var expected = new Field("countries")
+            {
+                Filters = new List<FieldFilter>
+                {
+                    new()
+                    {
+                        Name = new List<string> {"code"},
+                        Type = FieldFilterType.NotEqual,
+                        Value = "GB"
+                    }
+                }
+            };
+
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -103,15 +132,23 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var stringFilter = Assert.Single(countryField.Filters);
-            Assert.NotNull(stringFilter);
-            var stringFilterName = Assert.Single(stringFilter.Name);
-            Assert.Equal("code", stringFilterName);
-            Assert.Equal(FieldFilterType.StringContains, stringFilter.Type);
-            Assert.Equal("GB", stringFilter.Value);
+            var expected = new Field("countries")
+            {
+                Filters = new List<FieldFilter>
+                {
+                    new()
+                    {
+                        Name = new List<string> {"code"},
+                        Type = FieldFilterType.StringContains,
+                        Value = "GB"
+                    }
+                }
+            };
+
+            Assert.Equal(expected, countryField);
         }
-        
-        
+
+
         [Fact]
         public void Where_StringsContainsField_IsTranslated()
         {
@@ -125,19 +162,22 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var stringFilter = Assert.Single(countryField.Filters);
-            Assert.NotNull(stringFilter);
-            var stringFilterName = Assert.Single(stringFilter.Name);
-            Assert.Equal("code", stringFilterName);
-            Assert.Equal(FieldFilterType.In, stringFilter.Type);
-            var stringFilterValue = Assert.IsType<List<object>>(stringFilter.Value);
-            Assert.Collection(
-                stringFilterValue,
-                f => Assert.Equal("GB", f),
-                f => Assert.Equal("FR", f)
-            );
+            var expected = new Field("countries")
+            {
+                Filters = new List<FieldFilter>
+                {
+                    new()
+                    {
+                        Name = new List<string> {"code"},
+                        Type = FieldFilterType.In,
+                        Value = new List<string> {"GB", "FR"}
+                    }
+                }
+            };
+
+            Assert.Equal(expected, countryField);
         }
-        
+
         [Fact]
         public void Where_NestedStringsContainsField_IsTranslated()
         {
@@ -150,20 +190,23 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var stringFilter = Assert.Single(countryField.Filters);
-            Assert.NotNull(stringFilter);
-            var stringFilterName = Assert.Single(stringFilter.Name);
-            Assert.Equal("code", stringFilterName);
-            Assert.Equal(FieldFilterType.In, stringFilter.Type);
-            var stringFilterValue = Assert.IsType<List<object>>(stringFilter.Value);
-            Assert.Collection(
-                stringFilterValue,
-                f => Assert.Equal("GB", f),
-                f => Assert.Equal("FR", f)
-            );
+            var expected = new Field("countries")
+            {
+                Filters = new List<FieldFilter>
+                {
+                    new()
+                    {
+                        Name = new List<string> {"code"},
+                        Type = FieldFilterType.In,
+                        Value = new List<string> {"GB", "FR"}
+                    }
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
-        
-        
+
+
         [Fact]
         public void Where_StringStartsWith_IsTranslated()
         {
@@ -176,14 +219,22 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var stringFilter = Assert.Single(countryField.Filters);
-            Assert.NotNull(stringFilter);
-            var stringFilterName = Assert.Single(stringFilter.Name);
-            Assert.Equal("code", stringFilterName);
-            Assert.Equal(FieldFilterType.StringStartsWith, stringFilter.Type);
-            Assert.Equal("GB", stringFilter.Value);
+            var expected = new Field("countries")
+            {
+                Filters = new List<FieldFilter>
+                {
+                    new()
+                    {
+                        Name = new List<string> {"code"},
+                        Type = FieldFilterType.StringStartsWith,
+                        Value = "GB"
+                    }
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
-        
+
         [Fact]
         public void Where_StringEndsWith_IsTranslated()
         {
@@ -196,12 +247,20 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var stringFilter = Assert.Single(countryField.Filters);
-            Assert.NotNull(stringFilter);
-            var stringFilterName = Assert.Single(stringFilter.Name);
-            Assert.Equal("code", stringFilterName);
-            Assert.Equal(FieldFilterType.StringEndsWith, stringFilter.Type);
-            Assert.Equal("GB", stringFilter.Value);
+            var expected = new Field("countries")
+            {
+                Filters = new List<FieldFilter>
+                {
+                    new()
+                    {
+                        Name = new List<string> {"code"},
+                        Type = FieldFilterType.StringEndsWith,
+                        Value = "GB"
+                    }
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
     }
 }

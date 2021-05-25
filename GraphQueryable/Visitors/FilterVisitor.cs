@@ -78,10 +78,7 @@ namespace GraphQueryable.Visitors
         {
             var item = new FilteredItem
             {
-                Filter = new FilteredItemFilter
-                {
-                    Type = FieldFilterType.None
-                }
+                Filter = new FilteredItemFilter()
             };
 
             _filterScope.Push(item);
@@ -107,10 +104,7 @@ namespace GraphQueryable.Visitors
         {
             var item = new FilteredItem
             {
-                Filter = new FilteredItemFilter
-                {
-                    Type = FieldFilterType.None
-                }
+                Filter = new FilteredItemFilter()
             };
 
             _filterScope.Push(item);

@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using GraphQueryable.Tests.Client;
+using GraphQueryable.Tokens;
 using Xunit;
 
 namespace GraphQueryable.Tests
@@ -17,11 +19,16 @@ namespace GraphQueryable.Tests
             var context = new GraphQueryContext();
             var countryField = context.Parse(queryable);
 
+            var expected = new Field("countries")
+            {
+                Children = new List<Field>
+                {
+                    new("name")
+                }
+            };
+            
             // Assert
-            Assert.Equal("countries", countryField.Name);
-            var countryNameField = Assert.Single(countryField.Children);
-            Assert.NotNull(countryNameField);
-            Assert.Equal("name", countryNameField.Name);
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -36,9 +43,16 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            Assert.Equal(2, countryField.Children.Count);
-            Assert.Single(countryField.Children, f => f.Name == "code");
-            Assert.Single(countryField.Children, f => f.Name == "name");
+            var expected = new Field("countries")
+            {
+                Children = new List<Field>
+                {
+                    new("code"),
+                    new("name")
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -53,12 +67,21 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var continentField = Assert.Single(countryField.Children);
-            Assert.NotNull(continentField);
-            Assert.Equal("continent", continentField.Name);
-            var nameField = Assert.Single(continentField.Children);
-            Assert.NotNull(nameField);
-            Assert.Equal("name", nameField.Name);
+            var expected = new Field("countries")
+            {
+                Children = new List<Field>
+                {
+                    new("continent")
+                    {
+                        Children = new List<Field>
+                        {
+                            new("name")
+                        }
+                    }
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -73,12 +96,22 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var continentField = Assert.Single(countryField.Children);
-            Assert.NotNull(continentField);
-            Assert.Equal("continent", continentField.Name);
-            Assert.Equal(2, continentField.Children.Count);
-            Assert.Single(continentField.Children, f => f.Name == "code");
-            Assert.Single(continentField.Children, f => f.Name == "name");
+            var expected = new Field("countries")
+            {
+                Children = new List<Field>
+                {
+                    new("continent")
+                    {
+                        Children = new List<Field>
+                        {
+                            new("code"),
+                            new("name")
+                        }
+                    }
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -93,13 +126,22 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            Assert.Equal(2, countryField.Children.Count);
-            Assert.Single(countryField.Children, f => f.Name == "name");
-            var continentField = Assert.Single(countryField.Children, c => c.Name == "continent");
-            Assert.NotNull(continentField);
-            var continentNameField = Assert.Single(continentField.Children);
-            Assert.NotNull(continentNameField);
-            Assert.Equal("name", continentNameField.Name);
+            var expected = new Field("countries")
+            {
+                Children = new List<Field>
+                {
+                    new("name"),
+                    new("continent")
+                    {
+                        Children = new List<Field>
+                        {
+                            new("name")
+                        }
+                    }
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -115,14 +157,24 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            Assert.Equal(3, countryField.Children.Count);
-            Assert.Single(countryField.Children, f => f.Name == "code");
-            Assert.Single(countryField.Children, f => f.Name == "name");
-            var continentField = Assert.Single(countryField.Children, c => c.Name == "continent");
-            Assert.NotNull(continentField);
-            Assert.Equal(2, continentField.Children.Count);
-            Assert.Single(continentField.Children, f => f.Name == "code");
-            Assert.Single(continentField.Children, f => f.Name == "name");
+            var expected = new Field("countries")
+            {
+                Children = new List<Field>
+                {
+                    new("code"),
+                    new("name"),
+                    new("continent")
+                    {
+                        Children = new List<Field>
+                        {
+                            new("code"),
+                            new("name")
+                        }
+                    }
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -137,9 +189,15 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var countryNameField = Assert.Single(countryField.Children);
-            Assert.NotNull(countryNameField);
-            Assert.Equal("name", countryNameField.Name);
+            var expected = new Field("countries")
+            {
+                Children = new List<Field>
+                {
+                    new("name")
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
@@ -158,17 +216,26 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            Assert.Equal(2, countryField.Children.Count);
-            Assert.Single(countryField.Children, f => f.Name == "name");
-            var continentField = Assert.Single(countryField.Children, f => f.Name == "continent");
-            Assert.NotNull(continentField);
-            var continentNameField = Assert.Single(continentField.Children);
-            Assert.NotNull(continentNameField);
-            Assert.Equal("name", continentNameField.Name);
+            var expected = new Field("countries")
+            {
+                Children = new List<Field>
+                {
+                    new("name"),
+                    new("continent")
+                    {
+                        Children = new List<Field>
+                        {
+                            new("name")
+                        }
+                    }
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
 
         [Fact]
-        public void Select_MultipleMixedDeepDuplicateFields_AppearsOnce()
+        public void Select_MultipleDeepDuplicateFields_AppearsOnce()
         {
             // Arrange
             var countries = new GraphQueryable<Country>("countries");
@@ -179,12 +246,21 @@ namespace GraphQueryable.Tests
             var countryField = context.Parse(queryable);
 
             // Assert
-            var continentField = Assert.Single(countryField.Children);
-            Assert.NotNull(continentField);
-            Assert.Equal("continent", continentField.Name);
-            var continentNameField = Assert.Single(continentField.Children);
-            Assert.NotNull(continentNameField);
-            Assert.Equal("name", continentNameField.Name);
+            var expected = new Field("countries")
+            {
+                Children = new List<Field>
+                {
+                    new("continent")
+                    {
+                        Children = new List<Field>
+                        {
+                            new("name")
+                        }
+                    }
+                }
+            };
+            
+            Assert.Equal(expected, countryField);
         }
     }
 }

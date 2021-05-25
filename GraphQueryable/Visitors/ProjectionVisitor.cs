@@ -52,7 +52,7 @@ namespace GraphQueryable.Visitors
             return base.VisitParameter(node);
         }
 
-        private static List<Field> ResolveProjections(IEnumerable<ProjectedField> projections)
+        private static List<Field> ResolveProjections(IEnumerable<ProjectedField?> projections)
         {
             return projections
                 .Where(p => p != null)
@@ -67,9 +67,9 @@ namespace GraphQueryable.Visitors
 
         private class ProjectedField
         {
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
-            public ProjectedField Child { get; set; }
+            public ProjectedField? Child { get; set; }
         }
     }
 }

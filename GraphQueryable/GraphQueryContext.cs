@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+using GraphQueryable.Expressions;
 using GraphQueryable.Tokens;
 using GraphQueryable.Visitors;
 
@@ -14,8 +13,11 @@ namespace GraphQueryable
             if (queryable.Provider is not GraphQueryProvider graphQueryProvider)
                 throw new NotSupportedException("IQueryable provider must be of type GraphQueryProvider");
 
+            var simplifier = new ExpressionSimplifier();
+            var simplifiedExpression = simplifier.Visit(queryable.Expression);
+            
             var visitor = new ScopeVisitor();
-            return visitor.ParseExpression(queryable.Expression, graphQueryProvider.ScopeName);
+            return visitor.ParseExpression(simplifiedExpression, graphQueryProvider.ScopeName);
         }
     }
 }
