@@ -13,10 +13,10 @@ namespace GraphQueryable.HotChocolate
         {
             _stringBuilder.Append(field.Name);
 
-            if (field.Filters.Any())
+            if (field.Filter is not null)
             {
                 var filterParser = new FilterParser();
-                var filters = filterParser.Resolve(field.Filters);
+                var filters = filterParser.Resolve(field.Filter);
                 _stringBuilder.Append("(where: { ");
                 _stringBuilder.Append(filters);
                 _stringBuilder.Append(" })");

@@ -15,11 +15,11 @@ namespace GraphQueryable.Visitors
         private readonly Stack<FilteredItem> _filterScope = new();
         private readonly List<FieldFilter> _filters = new();
 
-        public IEnumerable<FieldFilter> ParseExpression(Expression node)
+        public FieldFilter? ParseExpression(Expression node)
         {
             base.Visit(node);
 
-            return _filters;
+            return _filters.SingleOrDefault();
         }
 
         protected override Expression VisitMember(MemberExpression node)

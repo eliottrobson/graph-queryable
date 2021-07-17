@@ -22,13 +22,10 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterEqual<string>
                 {
-                    new FieldFilterEqual<string>
-                    {
-                        Name = new List<string> {"code"},
-                        Value = "GB"
-                    }
+                    Name = new List<string> {"code"},
+                    Value = "GB"
                 }
             };
 
@@ -49,13 +46,10 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterEqual<string>
                 {
-                    new FieldFilterEqual<string>
-                    {
-                        Name = new List<string> {"code"},
-                        Value = "GB"
-                    }
+                    Name = new List<string> {"code"},
+                    Value = "GB"
                 }
             };
 
@@ -76,13 +70,10 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterEqual<string>
                 {
-                    new FieldFilterEqual<string>
-                    {
-                        Name = new List<string> {"continent", "code"},
-                        Value = "EU"
-                    }
+                    Name = new List<string> {"continent", "code"},
+                    Value = "EU"
                 }
             };
 
@@ -103,13 +94,10 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterNotEqual<string>
                 {
-                    new FieldFilterNotEqual<string>
-                    {
-                        Name = new List<string> {"code"},
-                        Value = "GB"
-                    }
+                    Name = new List<string> {"code"},
+                    Value = "GB"
                 }
             };
 
@@ -130,13 +118,10 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterContains<string>
                 {
-                    new FieldFilterContains<string>
-                    {
-                        Name = new List<string> {"code"},
-                        Value = "GB"
-                    }
+                    Name = new List<string> {"code"},
+                    Value = "GB"
                 }
             };
 
@@ -159,13 +144,10 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterContains<List<string>>
                 {
-                    new FieldFilterContains<List<string>>
-                    {
-                        Name = new List<string> {"code"},
-                        Value = new List<string> {"GB", "FR"}
-                    }
+                    Name = new List<string> {"code"},
+                    Value = new List<string> {"GB", "FR"}
                 }
             };
 
@@ -186,13 +168,10 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterContains<List<string>>
                 {
-                    new FieldFilterContains<List<string>>
-                    {
-                        Name = new List<string> {"code"},
-                        Value = new List<string> {"GB", "FR"}
-                    }
+                    Name = new List<string> {"code"},
+                    Value = new List<string> {"GB", "FR"}
                 }
             };
             
@@ -214,13 +193,10 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterStartsWith<string>
                 {
-                    new FieldFilterStartsWith<string>
-                    {
-                        Name = new List<string> {"code"},
-                        Value = "GB"
-                    }
+                    Name = new List<string> {"code"},
+                    Value = "GB"
                 }
             };
             
@@ -241,13 +217,10 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterEndsWith<string>
                 {
-                    new FieldFilterEndsWith<string>
-                    {
-                        Name = new List<string> {"code"},
-                        Value = "GB"
-                    }
+                    Name = new List<string> {"code"},
+                    Value = "GB"
                 }
             };
             

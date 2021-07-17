@@ -16,24 +16,21 @@ namespace GraphQueryable.HotChocolate.Tests
                 {
                     new("name")
                 },
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterAnd
                 {
-                    new FieldFilterAnd
-                    {
-                        Name = new List<string>(),
-                        Value = (
-                            Left: new FieldFilterNotEqual<string>
-                            {
-                                Name = new List<string> {"code"},
-                                Value = "FR"
-                            },
-                            Right: new FieldFilterNotEqual<string>
-                            {
-                                Name = new List<string> {"code"},
-                                Value = "DE"
-                            }
-                        )
-                    }
+                    Name = new List<string>(),
+                    Value = (
+                        Left: new FieldFilterNotEqual<string>
+                        {
+                            Name = new List<string> {"code"},
+                            Value = "FR"
+                        },
+                        Right: new FieldFilterNotEqual<string>
+                        {
+                            Name = new List<string> {"code"},
+                            Value = "DE"
+                        }
+                    )
                 }
             };
 
@@ -55,24 +52,21 @@ namespace GraphQueryable.HotChocolate.Tests
                 {
                     new("name")
                 },
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterOr
                 {
-                    new FieldFilterOr
-                    {
-                        Name = new List<string>(),
-                        Value = (
-                            Left: new FieldFilterEqual<string>
-                            {
-                                Name = new List<string> {"code"},
-                                Value = "GB"
-                            },
-                            Right: new FieldFilterEqual<string>
-                            {
-                                Name = new List<string> {"code"},
-                                Value = "FR"
-                            }
-                        )
-                    }
+                    Name = new List<string>(),
+                    Value = (
+                        Left: new FieldFilterEqual<string>
+                        {
+                            Name = new List<string> {"code"},
+                            Value = "GB"
+                        },
+                        Right: new FieldFilterEqual<string>
+                        {
+                            Name = new List<string> {"code"},
+                            Value = "FR"
+                        }
+                    )
                 }
             };
         

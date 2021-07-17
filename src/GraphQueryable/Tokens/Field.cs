@@ -18,7 +18,7 @@ namespace GraphQueryable.Tokens
         
         public string? Name { get; init; }
         
-        public List<FieldFilter> Filters { get; init; } = new();
+        public FieldFilter? Filter { get; set; }
         
         public List<Field> Projections { get; init; } = new();
 
@@ -28,7 +28,7 @@ namespace GraphQueryable.Tokens
             if (ReferenceEquals(this, other)) return true;
 
             return ValueEquality.Equal(Name, other.Name) &&
-                   ValueEquality.Equal(Filters, other.Filters) &&
+                   ValueEquality.Equal(Filter, other.Filter) &&
                    ValueEquality.Equal(Projections, other.Projections);
         }
 
@@ -36,7 +36,7 @@ namespace GraphQueryable.Tokens
         {
             return HashCode.Combine(
                 ValueEquality.GetHashCode(Name),
-                ValueEquality.GetHashCode(Filters),
+                ValueEquality.GetHashCode(Filter),
                 ValueEquality.GetHashCode(Projections));
         }
     }

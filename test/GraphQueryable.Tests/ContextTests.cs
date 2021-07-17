@@ -1,4 +1,5 @@
-﻿using GraphQueryable.Tests.Client;
+﻿using System.Linq;
+using GraphQueryable.Tests.Client;
 using Xunit;
 
 namespace GraphQueryable.Tests

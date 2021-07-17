@@ -33,8 +33,18 @@ namespace GraphQueryable.Visitors
             {
                 var filterVisitor = new FilterVisitor();
 
-                var filters = filterVisitor.ParseExpression(node.Arguments[1]);
-                _field.Filters.AddRange(filters);
+                var filter = filterVisitor.ParseExpression(node.Arguments[1]);
+
+                if (filter is not null)
+                {
+                    _field.Filter = _field.Filter is null
+                        ? filter
+                        : new FieldFilterAnd
+                        {
+                            Value = (Left: _field.Filter, Right: filter)
+                        };
+                }
+                
             }
             
             return base.VisitMethodCall(node);

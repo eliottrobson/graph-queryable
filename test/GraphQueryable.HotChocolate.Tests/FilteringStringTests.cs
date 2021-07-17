@@ -16,13 +16,10 @@ namespace GraphQueryable.HotChocolate.Tests
                 {
                     new("name")
                 },
-                Filters = new List<FieldFilter>
+                Filter = new FieldFilterEqual<string>
                 {
-                    new FieldFilterEqual<string>
-                    {
-                        Name = new List<string> {"code"},
-                        Value = "GB"
-                    }
+                    Name = new List<string> {"code"},
+                    Value = "GB"
                 }
             };
             
@@ -44,13 +41,10 @@ namespace GraphQueryable.HotChocolate.Tests
                  {
                      new("name")
                  },
-                 Filters = new List<FieldFilter>
+                 Filter = new FieldFilterNotEqual<string>
                  {
-                     new FieldFilterNotEqual<string>
-                     {
-                         Name = new List<string> {"code"},
-                         Value = "GB"
-                     }
+                     Name = new List<string> {"code"},
+                     Value = "GB"
                  }
              };
             

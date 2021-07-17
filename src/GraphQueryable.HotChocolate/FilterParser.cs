@@ -10,15 +10,7 @@ namespace GraphQueryable.HotChocolate
     {
         private readonly StringBuilder _stringBuilder = new();
         
-        public string Resolve(IEnumerable<FieldFilter> fields)
-        {
-            foreach (var field in fields)
-                ResolveFilter(field);
-            
-            return _stringBuilder.ToString();
-        }
-
-        private void ResolveFilter(FieldFilter filter)
+        public string Resolve(FieldFilter filter)
         {
             if (filter.Name.Any())
             {
@@ -34,6 +26,8 @@ namespace GraphQueryable.HotChocolate
             {
                 _stringBuilder.Append(" }");
             }
+            
+            return _stringBuilder.ToString();
         }
 
         private void ResolveFilterType(FieldFilter filter)
@@ -60,18 +54,18 @@ namespace GraphQueryable.HotChocolate
         private void ResolveFilterType(FieldFilterAnd filter)
         {
             _stringBuilder.Append("and: [{ ");
-            ResolveFilter(filter.Value.Left);
+            Resolve(filter.Value.Left);
             _stringBuilder.Append(" }, { ");
-            ResolveFilter(filter.Value.Right);
+            Resolve(filter.Value.Right);
             _stringBuilder.Append(" }]");
         }
         
         private void ResolveFilterType(FieldFilterOr filter)
         {
             _stringBuilder.Append("or: [{ ");
-            ResolveFilter(filter.Value.Left);
+            Resolve(filter.Value.Left);
             _stringBuilder.Append(" }, { ");
-            ResolveFilter(filter.Value.Right);
+            Resolve(filter.Value.Right);
             _stringBuilder.Append(" }]");
         }
         
