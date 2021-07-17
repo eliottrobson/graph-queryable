@@ -1,44 +1,66 @@
-﻿// using System.Collections.Generic;
-// using System.Linq;
-// using GraphQueryable.Tests.Client;
-// using GraphQueryable.Visitors.HotChocolate;
-// using Xunit;
-//
-// namespace GraphQueryable.Tests
-// {
-//     public class FilteringStringTests
-//     {
-//         [Fact]
-//         public void Where_StringEquals_IsTranslated()
-//         {
-//             // Arrange
-//             var countries = new GraphQueryable<Country>("countries");
-//             var queryable = countries.Where(c => c.Code == "GB").Select(c => c.Name);
-//
-//             // Act
-//             var visitor = new HotChocolateConventionVisitor();
-//             var context = new GraphQueryContext(visitor);
-//             var query = context.Parse(queryable);
-//             
-//             // Assert
-//             Assert.Equal("countries(where: { code: { eq: \"GB\" } }) { name }", query);
-//         }
-//         
-//         [Fact]
-//         public void Where_StringNotEquals_IsTranslated()
-//         {
-//             // Arrange
-//             var countries = new GraphQueryable<Country>("countries");
-//             var queryable = countries.Where(c => c.Code != "GB").Select(c => c.Name);
-//
-//             // Act
-//             var visitor = new HotChocolateConventionVisitor();
-//             var context = new GraphQueryContext(visitor);
-//             var query = context.Parse(queryable);
-//             
-//             // Assert
-//             Assert.Equal("countries(where: { code: { neq: \"GB\" } }) { name }", query);
-//         }
+﻿using System.Collections.Generic;
+using GraphQueryable.Tokens;
+using Xunit;
+
+namespace GraphQueryable.HotChocolate.Tests
+{
+    public class FilteringStringTests
+    {
+        [Fact]
+        public void Where_StringEquals_IsTranslated()
+        {
+            // Arrange
+            var field = new Field("countries")
+            {
+                Projections = new List<Field>
+                {
+                    new("name")
+                },
+                Filters = new List<FieldFilter>
+                {
+                    new FieldFilterEqual<string>
+                    {
+                        Name = new List<string> {"code"},
+                        Value = "GB"
+                    }
+                }
+            };
+            
+            // Act
+            var parser = new HotChocolateConventionParser();
+            var query = parser.Parse(field);
+            
+            // Assert
+            Assert.Equal("countries(where: { code: { eq: \"GB\" } }) { name }", query);
+        }
+         
+         [Fact]
+         public void Where_StringNotEquals_IsTranslated()
+         {
+             // Arrange
+             var field = new Field("countries")
+             {
+                 Projections = new List<Field>
+                 {
+                     new("name")
+                 },
+                 Filters = new List<FieldFilter>
+                 {
+                     new FieldFilterNotEqual<string>
+                     {
+                         Name = new List<string> {"code"},
+                         Value = "GB"
+                     }
+                 }
+             };
+            
+             // Act
+             var parser = new HotChocolateConventionParser();
+             var query = parser.Parse(field);
+             
+             // Assert
+             Assert.Equal("countries(where: { code: { neq: \"GB\" } }) { name }", query);
+         }
 //         
 //         [Fact]
 //         public void Where_NotStringEquals_IsTranslated()
@@ -219,5 +241,5 @@
 //             // Assert
 //             Assert.Equal("countries(where: { code: { nendsWith: \"GB\" } }) { name }", query);
 //         }
-//     }
-// }
+    }
+}

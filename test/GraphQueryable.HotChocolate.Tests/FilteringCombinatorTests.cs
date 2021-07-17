@@ -1,42 +1,87 @@
-﻿// using System.Linq;
-// using GraphQueryable.Tests.Client;
-// using GraphQueryable.Visitors.HotChocolate;
-// using Xunit;
-//
-// namespace GraphQueryable.Tests
-// {
-//     public class FilteringCombinatorTests
-//     {
-//         [Fact]
-//         public void Where_AndTwoPredicates_IsTranslated()
-//         {
-//             // Arrange
-//             var countries = new GraphQueryable<Country>("countries");
-//             var queryable = countries.Where(c => c.Code != "FR" && c.Code != "DE").Select(c => c.Name);
-//
-//             // Act
-//             var visitor = new HotChocolateConventionVisitor();
-//             var context = new GraphQueryContext(visitor);
-//             var query = context.Parse(queryable);
-//             
-//             // Assert
-//             Assert.Equal("(where: { and: [{ code: { neq: \"FR\" } }, { code: { neq: \"DE\" } }] }) { name }", query);
-//         }
-//         
-//         [Fact]
-//         public void Where_OrTwoPredicates_IsTranslated()
-//         {
-//             // Arrange
-//             var countries = new GraphQueryable<Country>("countries");
-//             var queryable = countries.Where(c => c.Code == "GB" || c.Code == "FR").Select(c => c.Name);
-//
-//             // Act
-//             var visitor = new HotChocolateConventionVisitor();
-//             var context = new GraphQueryContext(visitor);
-//             var query = context.Parse(queryable);
-//             
-//             // Assert
-//             Assert.Equal("(where: { or: [{ code: { eq: \"GB\" } }, { code: { eq: \"FR\" } }] }) { name }", query);
-//         }
-//     }
-// }
+﻿using System.Collections.Generic;
+using GraphQueryable.Tokens;
+using Xunit;
+
+namespace GraphQueryable.HotChocolate.Tests
+{
+    public class FilteringCombinatorTests
+    {
+        [Fact]
+        public void Where_AndTwoPredicates_IsTranslated()
+        {
+            // Arrange
+            var field = new Field("countries")
+            {
+                Projections = new List<Field>
+                {
+                    new("name")
+                },
+                Filters = new List<FieldFilter>
+                {
+                    new FieldFilterAnd
+                    {
+                        Name = new List<string>(),
+                        Value = (
+                            Left: new FieldFilterNotEqual<string>
+                            {
+                                Name = new List<string> {"code"},
+                                Value = "FR"
+                            },
+                            Right: new FieldFilterNotEqual<string>
+                            {
+                                Name = new List<string> {"code"},
+                                Value = "DE"
+                            }
+                        )
+                    }
+                }
+            };
+
+            // Act
+            var parser = new HotChocolateConventionParser();
+            var query = parser.Parse(field);
+            
+            // Assert
+            Assert.Equal("countries(where: { and: [{ code: { neq: \"FR\" } }, { code: { neq: \"DE\" } }] }) { name }", query);
+        }
+        
+        [Fact]
+        public void Where_OrTwoPredicates_IsTranslated()
+        {
+            // Arrange
+            var field = new Field("countries")
+            {
+                Projections = new List<Field>
+                {
+                    new("name")
+                },
+                Filters = new List<FieldFilter>
+                {
+                    new FieldFilterOr
+                    {
+                        Name = new List<string>(),
+                        Value = (
+                            Left: new FieldFilterEqual<string>
+                            {
+                                Name = new List<string> {"code"},
+                                Value = "GB"
+                            },
+                            Right: new FieldFilterEqual<string>
+                            {
+                                Name = new List<string> {"code"},
+                                Value = "FR"
+                            }
+                        )
+                    }
+                }
+            };
+        
+            // Act
+            var parser = new HotChocolateConventionParser();
+            var query = parser.Parse(field);
+            
+            // Assert
+            Assert.Equal("countries(where: { or: [{ code: { eq: \"GB\" } }, { code: { eq: \"FR\" } }] }) { name }", query);
+        }
+    }
+}

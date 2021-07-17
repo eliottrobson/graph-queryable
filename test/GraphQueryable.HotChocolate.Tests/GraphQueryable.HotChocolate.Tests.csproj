@@ -19,4 +19,9 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\GraphQueryable.HotChocolate\GraphQueryable.HotChocolate.csproj" />
+      <ProjectReference Include="..\..\src\GraphQueryable\GraphQueryable.csproj" />
+    </ItemGroup>
+
 </Project>
