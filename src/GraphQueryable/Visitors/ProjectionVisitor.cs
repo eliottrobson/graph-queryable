@@ -60,7 +60,7 @@ namespace GraphQueryable.Visitors
                 .Select(p => new Field
                 {
                     Name = p.First().Name,
-                    Children = ResolveProjections(p.Select(ps => ps.Child))
+                    Projections = ResolveProjections(p.Select(ps => ps.Child))
                 })
                 .ToList();
         }

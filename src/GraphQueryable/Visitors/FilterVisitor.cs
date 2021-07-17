@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,12 +13,13 @@ namespace GraphQueryable.Visitors
     {
         private readonly Stack<FilteredField> _memberScope = new();
         private readonly Stack<FilteredItem> _filterScope = new();
-        private readonly List<FilteredItem> _filters = new();
+        private readonly List<FieldFilter> _filters = new();
 
         public IEnumerable<FieldFilter> ParseExpression(Expression node)
         {
             base.Visit(node);
-            return ResolveFilters(_filters);
+
+            return _filters;
         }
 
         protected override Expression VisitMember(MemberExpression node)
@@ -56,16 +58,26 @@ namespace GraphQueryable.Visitors
                 scopeItem.Filter ??= new FilteredItemFilter();
 
                 if (scopeItem.Filter.Value == default)
+                {
                     scopeItem.Filter.Value = node.Value;
-                else if (scopeItem.Filter.Value is List<object> filterList)
+                }
+                else if (scopeItem.Filter.Value is IList filterList)
+                {
                     filterList.Add(node.Value);
+                }
                 else
-                    scopeItem.Filter.Value = new[] {scopeItem.Filter.Value}.Append(node.Value).ToList();
+                {
+                    var listType = typeof(List<>).MakeGenericType(scopeItem.Filter.Value.GetType());
+                    var list = Activator.CreateInstance(listType) as IList;
+                    list.Add(node.Value);
+                    scopeItem.Filter.Value = list;
+                }
+                    
             }
 
             return base.VisitConstant(node);
         }
-        
+
         protected override Expression VisitBinary(BinaryExpression node)
         {
             var item = new FilteredItem
@@ -79,15 +91,20 @@ namespace GraphQueryable.Visitors
 
             _filterScope.Pop();
 
-            switch (node.NodeType)
+            var filter = node.NodeType switch
             {
-                case ExpressionType.Equal:
-                    item.Filter.Type = FieldFilterType.Equal;
-                    break;
-                case ExpressionType.NotEqual:
-                    item.Filter.Type = FieldFilterType.NotEqual;
-                    break;
-            }
+                ExpressionType.Equal when item.Filter?.Value is not null =>
+                    CreateFieldFilter(item, typeof(FieldFilterEqual<>)),
+                ExpressionType.NotEqual when item.Filter?.Value is not null =>
+                    CreateFieldFilter(item, typeof(FieldFilterNotEqual<>)),
+                _ => throw new NotSupportedException($"Unsupported node type: '{node.NodeType}'")
+            };
+
+            if (filter is not null && item.Field is not null)
+                filter.Name = FlattenFieldName(item.Field);
+
+            if (filter is not null)
+                _filters.Add(filter);
 
             return result;
         }
@@ -101,54 +118,40 @@ namespace GraphQueryable.Visitors
 
             _filterScope.Push(item);
 
-            item.Filter.Type = node.Method.Name switch
+            var result = base.VisitMethodCall(node);
+
+            _filterScope.Pop();
+            
+            var filter = node.Method.Name switch
             {
                 nameof(string.Contains) when node.Method.DeclaringType == typeof(string) =>
-                    FieldFilterType.StringContains,
+                    CreateFieldFilter(item, typeof(FieldFilterContains<>)),
                 nameof(string.StartsWith) when node.Method.DeclaringType == typeof(string) =>
-                    FieldFilterType.StringStartsWith,
+                    CreateFieldFilter(item, typeof(FieldFilterStartsWith<>)),
                 nameof(string.EndsWith) when node.Method.DeclaringType == typeof(string) =>
-                    FieldFilterType.StringEndsWith,
+                    CreateFieldFilter(item, typeof(FieldFilterEndsWith<>)),
                 nameof(Enumerable.Contains) when
                     node.Method.DeclaringType == typeof(Enumerable) ||
                     (node.Arguments.Count == 1 && node.Method.DeclaringType ==
                         typeof(List<>).MakeGenericType(node.Arguments[0].Type)) =>
-                    FieldFilterType.CollectionIn,
+                    CreateFieldFilter(item, typeof(FieldFilterContains<>).MakeGenericType(typeof(List<>).MakeGenericType(node.Arguments[0].Type))),
                 _ => throw new NotSupportedException($"Unsupported method type: '{node.Method}'")
             };
 
-            var result = base.VisitMethodCall(node);
+            if (filter is not null && item.Field is not null)
+                filter.Name = FlattenFieldName(item.Field);
 
-            _filterScope.Pop();
+            if (filter is not null)
+                _filters.Add(filter);
 
             return result;
-        }
-
-        protected override Expression VisitParameter(ParameterExpression node)
-        {
-            if (_filterScope.TryPeek(out var rootItem))
-                _filters.Add(rootItem);
-
-            return base.VisitParameter(node);
-        }
-
-        private static List<FieldFilter> ResolveFilters(IEnumerable<FilteredItem> filters)
-        {
-            return filters
-                .Select(f => new FieldFilter
-                {
-                    Name = FlattenFieldName(f.Field),
-                    Type = f.Filter.Type,
-                    Value = f.Filter.Value
-                })
-                .ToList();
         }
 
         private static List<string> FlattenFieldName(FilteredField field)
         {
             var filteredField = field;
             var name = new List<string>();
-            
+
             do
             {
                 if (filteredField.Name != null)
@@ -158,6 +161,21 @@ namespace GraphQueryable.Visitors
             } while (filteredField != null);
 
             return name;
+        }
+
+        private static FieldFilter? CreateFieldFilter(FilteredItem item, Type type)
+        {
+            if (item.Filter is null) return null;
+
+            if (type.IsGenericTypeDefinition && item.Filter.Value is not null)
+                type = type.MakeGenericType(item.Filter.Value.GetType());
+
+            var instance = Activator.CreateInstance(type);
+
+            if (item.Filter.Value is not null)
+                type.GetProperty("Value")?.SetValue(instance, item.Filter.Value, null);
+            
+            return instance as FieldFilter;
         }
 
         private class FilteredField
@@ -176,8 +194,6 @@ namespace GraphQueryable.Visitors
 
         private class FilteredItemFilter
         {
-            public FieldFilterType? Type { get; set; }
-
             public object? Value { get; set; }
         }
     }

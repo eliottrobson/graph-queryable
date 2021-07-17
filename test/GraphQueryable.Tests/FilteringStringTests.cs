@@ -24,10 +24,9 @@ namespace GraphQueryable.Tests
             {
                 Filters = new List<FieldFilter>
                 {
-                    new()
+                    new FieldFilterEqual<string>
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.Equal,
                         Value = "GB"
                     }
                 }
@@ -52,10 +51,9 @@ namespace GraphQueryable.Tests
             {
                 Filters = new List<FieldFilter>
                 {
-                    new()
+                    new FieldFilterEqual<string>
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.Equal,
                         Value = "GB"
                     }
                 }
@@ -80,10 +78,9 @@ namespace GraphQueryable.Tests
             {
                 Filters = new List<FieldFilter>
                 {
-                    new()
+                    new FieldFilterEqual<string>
                     {
                         Name = new List<string> {"continent", "code"},
-                        Type = FieldFilterType.Equal,
                         Value = "EU"
                     }
                 }
@@ -108,10 +105,9 @@ namespace GraphQueryable.Tests
             {
                 Filters = new List<FieldFilter>
                 {
-                    new()
+                    new FieldFilterNotEqual<string>
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.NotEqual,
                         Value = "GB"
                     }
                 }
@@ -136,10 +132,9 @@ namespace GraphQueryable.Tests
             {
                 Filters = new List<FieldFilter>
                 {
-                    new()
+                    new FieldFilterContains<string>
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.StringContains,
                         Value = "GB"
                     }
                 }
@@ -166,10 +161,9 @@ namespace GraphQueryable.Tests
             {
                 Filters = new List<FieldFilter>
                 {
-                    new()
+                    new FieldFilterContains<List<string>>
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.CollectionIn,
                         Value = new List<string> {"GB", "FR"}
                     }
                 }
@@ -194,10 +188,9 @@ namespace GraphQueryable.Tests
             {
                 Filters = new List<FieldFilter>
                 {
-                    new()
+                    new FieldFilterContains<List<string>>
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.CollectionIn,
                         Value = new List<string> {"GB", "FR"}
                     }
                 }
@@ -223,10 +216,9 @@ namespace GraphQueryable.Tests
             {
                 Filters = new List<FieldFilter>
                 {
-                    new()
+                    new FieldFilterStartsWith<string>
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.StringStartsWith,
                         Value = "GB"
                     }
                 }
@@ -251,10 +243,9 @@ namespace GraphQueryable.Tests
             {
                 Filters = new List<FieldFilter>
                 {
-                    new()
+                    new FieldFilterEndsWith<string>
                     {
                         Name = new List<string> {"code"},
-                        Type = FieldFilterType.StringEndsWith,
                         Value = "GB"
                     }
                 }

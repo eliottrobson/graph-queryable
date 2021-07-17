@@ -4,21 +4,40 @@ using GraphQueryable.Helpers;
 
 namespace GraphQueryable.Tokens
 {
-    public sealed record FieldFilter
+    public class FieldFilter : IEquatable<FieldFilter>
     {
-        public List<string> Name { get; init; } = new();
-        
-        public FieldFilterType? Type { get; init; }
-        
-        public object? Value { get; init; }
-        
+        public List<string> Name { get; set; } = new();
+
         public bool Equals(FieldFilter? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             
+            return ValueEquality.Equal(Name, other.Name);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(
+                ValueEquality.GetHashCode(Name));
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as FieldFilter);
+        }
+    }
+
+    public class FieldFilter<T> : FieldFilter, IEquatable<FieldFilter<T>>
+    {
+        public T? Value { get; set; }
+        
+        public bool Equals(FieldFilter<T>? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            
             return ValueEquality.Equal(Name, other.Name) &&
-                   ValueEquality.Equal(Type, other.Type) &&
                    ValueEquality.Equal(Value, other.Value);
         }
 
@@ -26,24 +45,12 @@ namespace GraphQueryable.Tokens
         {
             return HashCode.Combine(
                 ValueEquality.GetHashCode(Name),
-                ValueEquality.GetHashCode(Type),
                 ValueEquality.GetHashCode(Value));
         }
-    }
 
-    public enum FieldFilterType
-    {
-        Not,
-        And,
-        Or,
-        
-        Equal,
-        NotEqual,
-        
-        CollectionIn,
-        
-        StringContains,
-        StringStartsWith,
-        StringEndsWith
+        public override bool Equals(object? obj)
+        {
+            return Equals(obj as FieldFilter);
+        }
     }
 }

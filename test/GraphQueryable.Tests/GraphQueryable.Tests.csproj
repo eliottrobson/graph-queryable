@@ -21,7 +21,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\GraphQueryable\GraphQueryable.csproj" />
-      <ProjectReference Include="..\GraphQueryable\GraphQueryable.csproj" />
     </ItemGroup>
 
 </Project>

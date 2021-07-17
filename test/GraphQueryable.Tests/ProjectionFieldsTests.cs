@@ -21,7 +21,7 @@ namespace GraphQueryable.Tests
 
             var expected = new Field("countries")
             {
-                Children = new List<Field>
+                Projections = new List<Field>
                 {
                     new("name")
                 }
@@ -45,7 +45,7 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Children = new List<Field>
+                Projections = new List<Field>
                 {
                     new("code"),
                     new("name")
@@ -69,11 +69,11 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Children = new List<Field>
+                Projections = new List<Field>
                 {
                     new("continent")
                     {
-                        Children = new List<Field>
+                        Projections = new List<Field>
                         {
                             new("name")
                         }
@@ -98,11 +98,11 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Children = new List<Field>
+                Projections = new List<Field>
                 {
                     new("continent")
                     {
-                        Children = new List<Field>
+                        Projections = new List<Field>
                         {
                             new("code"),
                             new("name")
@@ -128,12 +128,12 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Children = new List<Field>
+                Projections = new List<Field>
                 {
                     new("name"),
                     new("continent")
                     {
-                        Children = new List<Field>
+                        Projections = new List<Field>
                         {
                             new("name")
                         }
@@ -159,13 +159,13 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Children = new List<Field>
+                Projections = new List<Field>
                 {
                     new("code"),
                     new("name"),
                     new("continent")
                     {
-                        Children = new List<Field>
+                        Projections = new List<Field>
                         {
                             new("code"),
                             new("name")
@@ -191,7 +191,7 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Children = new List<Field>
+                Projections = new List<Field>
                 {
                     new("name")
                 }
@@ -218,12 +218,12 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Children = new List<Field>
+                Projections = new List<Field>
                 {
                     new("name"),
                     new("continent")
                     {
-                        Children = new List<Field>
+                        Projections = new List<Field>
                         {
                             new("name")
                         }
@@ -248,11 +248,11 @@ namespace GraphQueryable.Tests
             // Assert
             var expected = new Field("countries")
             {
-                Children = new List<Field>
+                Projections = new List<Field>
                 {
                     new("continent")
                     {
-                        Children = new List<Field>
+                        Projections = new List<Field>
                         {
                             new("name")
                         }

@@ -20,7 +20,7 @@ namespace GraphQueryable.Tokens
         
         public List<FieldFilter> Filters { get; init; } = new();
         
-        public List<Field> Children { get; init; } = new();
+        public List<Field> Projections { get; init; } = new();
 
         public bool Equals(Field? other)
         {
@@ -29,7 +29,7 @@ namespace GraphQueryable.Tokens
 
             return ValueEquality.Equal(Name, other.Name) &&
                    ValueEquality.Equal(Filters, other.Filters) &&
-                   ValueEquality.Equal(Children, other.Children);
+                   ValueEquality.Equal(Projections, other.Projections);
         }
 
         public override int GetHashCode()
@@ -37,7 +37,7 @@ namespace GraphQueryable.Tokens
             return HashCode.Combine(
                 ValueEquality.GetHashCode(Name),
                 ValueEquality.GetHashCode(Filters),
-                ValueEquality.GetHashCode(Children));
+                ValueEquality.GetHashCode(Projections));
         }
     }
 }
