@@ -147,6 +147,11 @@ namespace GraphQueryable.Visitors
             return result;
         }
 
+        protected override Expression VisitUnary(UnaryExpression node)
+        {
+            return base.VisitUnary(node);
+        }
+
         private static List<string> FlattenFieldName(FilteredField field)
         {
             var filteredField = field;
